@@ -6,7 +6,7 @@ var _ = require('underscore');
 var config = require('../defaults');
 
 const bus = require('servicebus').bus({
-  url: config.servicebus.uri
+  url: config.servicebus.uri + "?heartbeat=60"
 });
 
 /* Maintains response references while asynchronous operations are processing */

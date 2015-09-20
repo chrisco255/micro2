@@ -4,7 +4,7 @@
 // ==================================
 module.exports = {
 	servicebus: {
-		uri: process.env.SERVICEBUS_URI || 'amqp://localhost:5672'
+		uri: process.env.SERVICEBUS_URI
 	},
 	port: process.env.PORT || 8080
 };
