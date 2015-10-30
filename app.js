@@ -1,3 +1,4 @@
+'use strict';
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,7 +6,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
-//var users = require('./routes/users');
+var passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 /*
 var passport = require('passport')
@@ -27,6 +29,35 @@ passport.use(new LocalStrategy(
 ));
 */
 
+
+/*passport.use(new LocalStrategy(
+    function(username, password, done) {
+      /!*let cmd = apiCmd.findOne('user', { username: username });
+       bus.send(cmd.command, cmd.payload);*!/
+      console.log('verifying');
+
+      userQ.send({ cmd: 'get' }, function(msg) {
+        //return response.status(msg.status).send(msg.payload);
+        let user = _(msg.payload).findWhere({ name: username });
+
+        return done(null, user);
+      });
+    }
+));*/
+
+passport.serializeUser(function(user, cb) {
+	cb(null, user._id);
+});
+
+passport.deserializeUser(function(id, cb) {
+	userQ.send({ cmd: 'get' }, function(msg) {
+		//return response.status(msg.status).send(msg.payload);
+		let user = _(msg.payload).findWhere({ _id: id });
+
+		cb(null, user);
+	});
+});
+
 var app = express();
 
 // view engine setup
@@ -40,6 +71,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+
 
 app.use('/', routes);
 //app.use('/users', users);
