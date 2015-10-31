@@ -4,8 +4,11 @@ const router = express.Router();
 const uuid = require('node-uuid');
 const _ = require('underscore');
 const config = require('../defaults');
+require('dotenv').load();
+/*
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+*/
 const CBBus = require('../lib/cbbus');
 
 const userQ = CBBus.createQueue({ queueName: 'user', expectResponse: true });
@@ -13,14 +16,15 @@ const userQ = CBBus.createQueue({ queueName: 'user', expectResponse: true });
 const jwt = require('express-jwt');
 
 const jwtCheck = jwt({
-	secret: new Buffer('OWPX_FtTRQCdnkSXUABWLCFZwAmlOCnHbOrPpFLQkss2v87oLyR82A2G5ZLgvKcU', 'base64'),
-	audience: 'wEFaW9dlhQb5NlEkjgbMaqJM0LtQJ6vk'
+	secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, 'base64'),
+	audience: process.env.AUTH0_CLIENT_ID
 });
+/*
 
 passport.use(new LocalStrategy(
 	function(username, password, done) {
-		/*let cmd = apiCmd.findOne('user', { username: username });
-		bus.send(cmd.command, cmd.payload);*/
+		/!*let cmd = apiCmd.findOne('user', { username: username });
+		bus.send(cmd.command, cmd.payload);*!/
 		console.log('verifying');
 
 		userQ.send({ cmd: 'get' }, function(msg) {
@@ -31,6 +35,7 @@ passport.use(new LocalStrategy(
 		});
 	}
 ));
+*/
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -45,10 +50,12 @@ router.post('/user', function(req, res) {
 });
 
 router.get('/user', jwtCheck, function(req, res) {
-	let response = res;
+	console.log('You authenticated');
+	res.status(200).send();
+	/*let response = res;
 	userQ.send({ cmd: 'get' }, function(msg) {
 		return response.status(msg.status).send(msg.payload);
-	});
+	});*/
 });
 
 module.exports = router;

@@ -6,46 +6,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
-var passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 
-/*
-var passport = require('passport')
-    , LocalStrategy = require('passport-local').Strategy;
-
-passport.use(new LocalStrategy(
-    function(username, password, done) {
-      User.findOne({ username: username }, function(err, user) {
-        if (err) { return done(err); }
-        if (!user) {
-          return done(null, false, { message: 'Incorrect username.' });
-        }
-        if (!user.validPassword(password)) {
-          return done(null, false, { message: 'Incorrect password.' });
-        }
-        return done(null, user);
-      });
-    }
-));
-*/
-
-
-/*passport.use(new LocalStrategy(
-    function(username, password, done) {
-      /!*let cmd = apiCmd.findOne('user', { username: username });
-       bus.send(cmd.command, cmd.payload);*!/
-      console.log('verifying');
-
-      userQ.send({ cmd: 'get' }, function(msg) {
-        //return response.status(msg.status).send(msg.payload);
-        let user = _(msg.payload).findWhere({ name: username });
-
-        return done(null, user);
-      });
-    }
-));*/
-
-passport.serializeUser(function(user, cb) {
+/*passport.serializeUser(function(user, cb) {
 	cb(null, user._id);
 });
 
@@ -56,7 +18,7 @@ passport.deserializeUser(function(id, cb) {
 
 		cb(null, user);
 	});
-});
+});*/
 
 var app = express();
 
@@ -71,11 +33,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(passport.initialize());
+//app.use(passport.initialize());
 
 
 app.use('/', routes);
-//app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
